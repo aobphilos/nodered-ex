@@ -1,0 +1,162 @@
+[
+  {
+    "id": "1710c00d.e8304",
+    "type": "tab",
+    "label": "Flow 1",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "48a42e48.74137",
+    "type": "ui_base",
+    "theme": {
+      "name": "theme-dark",
+      "lightTheme": {
+        "default": "#0094CE",
+        "baseColor": "#0094CE",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": true,
+        "reset": false
+      },
+      "darkTheme": {
+        "default": "#097479",
+        "baseColor": "#097479",
+        "baseFont": "Times New Roman,Times,serif",
+        "edited": true,
+        "reset": false
+      },
+      "customTheme": {
+        "name": "Untitled Theme 1",
+        "default": "#4B7930",
+        "baseColor": "#4B7930",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+      },
+      "themeState": {
+        "base-color": {
+          "default": "#097479",
+          "value": "#097479",
+          "edited": false
+        },
+        "page-titlebar-backgroundColor": {
+          "value": "#097479",
+          "edited": false
+        },
+        "page-backgroundColor": { "value": "#111111", "edited": false },
+        "page-sidebar-backgroundColor": { "value": "#000000", "edited": false },
+        "group-textColor": { "value": "#0eb8c0", "edited": false },
+        "group-borderColor": { "value": "#555555", "edited": false },
+        "group-backgroundColor": { "value": "#333333", "edited": false },
+        "widget-textColor": { "value": "#eeeeee", "edited": false },
+        "widget-backgroundColor": { "value": "#097479", "edited": false },
+        "widget-borderColor": { "value": "#333333", "edited": false },
+        "base-font": { "value": "Times New Roman,Times,serif" }
+      },
+      "angularTheme": {
+        "primary": "indigo",
+        "accents": "blue",
+        "warn": "red",
+        "background": "grey"
+      }
+    },
+    "site": {
+      "name": "Node-RED Dashboard",
+      "hideToolbar": "false",
+      "allowSwipe": "false",
+      "lockMenu": "false",
+      "allowTempTheme": "true",
+      "dateFormat": "DD/MM/YYYY",
+      "sizes": {
+        "sx": 48,
+        "sy": 48,
+        "gx": 6,
+        "gy": 6,
+        "cx": 6,
+        "cy": 6,
+        "px": 0,
+        "py": 0
+      }
+    }
+  },
+  {
+    "id": "3bccd41d.0e6efc",
+    "type": "ui_tab",
+    "name": "Tab 1",
+    "icon": "dashboard",
+    "order": 1
+  },
+  {
+    "id": "7b469d8d.557a74",
+    "type": "ui_group",
+    "z": "",
+    "name": "Mi PM 2.5",
+    "tab": "3bccd41d.0e6efc",
+    "order": 1,
+    "disp": true,
+    "width": "7",
+    "collapse": true
+  },
+  {
+    "id": "4614ed56.0e8324",
+    "type": "miio-airpurifier-input",
+    "z": "1710c00d.e8304",
+    "name": "Get Mi PM2.5",
+    "ip": "192.168.1.100",
+    "token": "5148b7d1d0a0ea0983ee33f10e38cee9",
+    "x": 170,
+    "y": 300,
+    "wires": [[], ["187f4509.56b06b", "ac067aae.030228", "2654c3ef.c713fc"]]
+  },
+  {
+    "id": "187f4509.56b06b",
+    "type": "file",
+    "z": "1710c00d.e8304",
+    "name": "",
+    "filename": "mi-pm25.log",
+    "appendNewline": true,
+    "createDir": false,
+    "overwriteFile": "false",
+    "encoding": "utf8",
+    "x": 550,
+    "y": 160,
+    "wires": [[]]
+  },
+  {
+    "id": "ac067aae.030228",
+    "type": "http request",
+    "z": "1710c00d.e8304",
+    "name": "",
+    "method": "POST",
+    "ret": "txt",
+    "paytoqs": false,
+    "url": "http://localhost:3000",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 550,
+    "y": 280,
+    "wires": [[]]
+  },
+  {
+    "id": "2654c3ef.c713fc",
+    "type": "ui_gauge",
+    "z": "1710c00d.e8304",
+    "name": "",
+    "group": "7b469d8d.557a74",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "gtype": "gage",
+    "title": "Air quality monitor",
+    "label": "uq/m3",
+    "format": "{{msg.payload.PM2_5Density}}",
+    "min": 0,
+    "max": "200",
+    "colors": ["#00b500", "#e6e600", "#ca3838"],
+    "seg1": "Good",
+    "seg2": "Unhealthy",
+    "x": 550,
+    "y": 380,
+    "wires": []
+  }
+]
