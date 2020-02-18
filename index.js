@@ -13,7 +13,7 @@
  *
  * ==============================================================
  */
-
+const crypto = require('crypto');
 const miio = require('miio');
 
 const handleErrorHere = err => {
@@ -25,8 +25,9 @@ try {
   // Resolve a device, resolving the token automatically or from storage
   miio
     .device({
-      address: '192.168.1.100',
-      token: '5148b7d1d0a0ea0983ee33f10e38cee9'
+      address: '192.168.13.1',
+      // address: '192.168.1.100',
+      // token: '4817d547ac9a7d80066395ee7b3cab6e'
     })
     .then(device => {
       console.log('Connected to', device);
@@ -38,10 +39,23 @@ try {
   });
 
   devices.on('available', async ({ device }) => {
+    const token = device.management.token;
+    console.log(`token: `, token);
+    device.management
+      .updateWireless({
+        ssid: 'MOSHI_PARK_WIFI',
+        passwd: 'rfedwsqa'
+      })
+      .then((info) => {
+        console.log('after wireless changed: ', info);
+        return device.management.updateToken(token);
+      })
+      .catch(console.error);
+
     if (device.matches('cap:pm2.5')) {
       console.log(await device.pm2_5());
-      device.on('pm2.5Changed', (a, b) => {
-        console.log('pm2.5 changed: ', a, b);
+      device.on('pm2.5Changed', (score, ctx) => {
+        console.log('pm2.5 changed: ', score);
       });
     }
 
