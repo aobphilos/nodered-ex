@@ -21,7 +21,7 @@ services:
     networks:
       - node-red-net
     volumes:
-      - node-red-data
+      - ./volumes/data:/data
 
   broker:
     image: eclipse-mosquitto
