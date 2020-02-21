@@ -10,12 +10,8 @@ services:
   node-red:
     image: aobphilos/node-red:aqi
     restart: unless-stopped
-    environment:
-      - TZ=Asia/Bangkok
-      - AIRVISUAL_CITY=Bang Na
-      - AIRVISUAL_STATE=Bangkok
-      - AIRVISUAL_COUNTRY=Thailand
-      - AIRVISUAL_KEY=1503c125-434f-4b06-9846-c445afea5d5d
+    env_file:
+      - ./configs/.env
     ports:
       - "1880:1880"
     networks:
