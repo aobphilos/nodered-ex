@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "miio": "^0.15.6",
     "node-red": "^1.0.3",
     "node-red-contrib-miio-airpurifier": "^0.3.2",

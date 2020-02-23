@@ -17,11 +17,13 @@ services:
     networks:
       - node-red-net
     volumes:
-      - ./volumes/data:/data
+      - ./volumes/node-red/data:/data
 
   broker:
     image: eclipse-mosquitto
     restart: unless-stopped
+    volumes:
+      - ./volumes/mqtt/data:/data
 
 volumes:
   node-red-data:
