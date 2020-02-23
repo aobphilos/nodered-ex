@@ -7,7 +7,8 @@ RUN npm install \
           dotenv \
           node-red-dashboard \
           node-red-contrib-ngrok \
-          node-red-contrib-sendgrid
+          node-red-contrib-sendgrid \
+          node-red-contrib-ip
         #   node-red-contrib-miio-airpurifier \
 
 WORKDIR /usr/src/node-red
