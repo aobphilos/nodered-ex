@@ -22,8 +22,13 @@ services:
   broker:
     image: eclipse-mosquitto
     restart: unless-stopped
+    ports:
+      - "1883:1883"
+    networks:
+      - node-red-net
     volumes:
-      - ./volumes/mqtt/data:/data
+      - ./volumes/mqtt/data:/mosquitto/data
+      - ./volumes/mqtt/log:/mosquitto/log
 
 volumes:
   node-red-data:
