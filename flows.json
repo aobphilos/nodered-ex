@@ -1,36 +1,43 @@
 [
   {
-    "id": "de7ffed2.b31b1",
+    "id": "5ae0159f.15184c",
     "type": "tab",
     "label": "Proxy",
     "disabled": false,
     "info": ""
   },
   {
-    "id": "2e34c3bc.d77f9c",
+    "id": "cf8099bf.e74d38",
     "type": "tab",
     "label": "AQI - Eko",
     "disabled": false,
     "info": ""
   },
   {
-    "id": "fa950047.80a58",
+    "id": "7a35a7df.308d48",
     "type": "tab",
     "label": "AQI - AirVisual",
     "disabled": false,
     "info": ""
   },
   {
-    "id": "ed906b93.077e28",
+    "id": "f56afe81.c9c94",
     "type": "tab",
     "label": "Corona Virus",
     "disabled": false,
     "info": ""
   },
   {
-    "id": "c7b94f5.66793b",
+    "id": "15974936.7b18a7",
     "type": "tab",
     "label": "MQTT Broker",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "8f2390e0.2d8a9",
+    "type": "tab",
+    "label": "Batify Bot",
     "disabled": false,
     "info": ""
   },
@@ -168,7 +175,6 @@
     "width": "6",
     "collapse": true
   },
-  { "id": "163d751a.3eb9cb", "type": "ngrokauth", "z": "" },
   { "id": "24d898f8.bda1b8", "type": "ngrokauth", "z": "" },
   {
     "id": "82d75fe6.a2011",
@@ -237,9 +243,9 @@
     "collapse": true
   },
   {
-    "id": "15166c05.110264",
+    "id": "df6f428b.d83cf",
     "type": "comment",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Sample: Retrieve AQI (AirVisual)",
     "info": "",
     "x": 170,
@@ -247,9 +253,9 @@
     "wires": []
   },
   {
-    "id": "57a5495e.eebfc8",
+    "id": "6b994278.3fd71c",
     "type": "http request",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "AirVisual API",
     "method": "GET",
     "ret": "obj",
@@ -261,12 +267,12 @@
     "authType": "",
     "x": 710,
     "y": 100,
-    "wires": [["30801090.8ae95"]]
+    "wires": [["5651191a.672c98"]]
   },
   {
-    "id": "6e7ed65a.2d25b8",
+    "id": "7290bb8d.5b3164",
     "type": "inject",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Inject Every - 1 hour",
     "topic": "",
     "payload": "",
@@ -277,14 +283,14 @@
     "onceDelay": "1",
     "x": 140,
     "y": 100,
-    "wires": [["fc084f49.34d5f"]],
+    "wires": [["c55f6f1.3a6129"]],
     "outputLabels": ["inject"],
     "icon": "font-awesome/fa-feed"
   },
   {
-    "id": "f44c859b.39c048",
+    "id": "e6d2e3ff.cf5a5",
     "type": "function",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Transform Data",
     "func": "function transformData() {\n  const { status, data } = flow.get('airData') || {};\n\n  if (status !== 'success')\n    return {\n      payload: { status: 'failed', message: 'Cannot get any data from API' }\n    };\n\n  return [\n    {\n      payload: {\n        status,\n        data\n      }\n    },\n    {\n      weather: data.current.weather\n    },\n    {\n      city: data.city,\n      state: data.state,\n      country: data.country,\n      pollution: data.current.pollution\n    }\n  ];\n}\n\nreturn transformData();\n",
     "outputs": 3,
@@ -292,15 +298,15 @@
     "x": 360,
     "y": 320,
     "wires": [
-      ["3f3da5d4.0da22a", "2cf16190.92d72e"],
-      ["e84e50d7.069fd"],
-      ["d35f3730.4348f8"]
+      ["af4b133.697f7f", "d0d361bd.91405"],
+      ["ca447619.cb6708"],
+      ["3e2c0fb9.27763"]
     ]
   },
   {
-    "id": "7775e3db.18848c",
+    "id": "205c2369.1c05dc",
     "type": "ui_template",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "group": "14884f49.fb2b41",
     "name": "Weather Box",
     "order": 1,
@@ -315,21 +321,21 @@
     "wires": [[]]
   },
   {
-    "id": "e84e50d7.069fd",
+    "id": "ca447619.cb6708",
     "type": "function",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Mapping Weather Icon",
     "func": "const { ic, tp: temp }  = msg.weather;\nlet desc = 'Weather Icon';\nlet icon = ic; \nswitch (ic){\n    case '01d': desc='clear sky (day)'; break;\n    case '01n': desc='clear sky (night)'; break;\n    case '02d': desc='few clouds (day)'; break;\n    case '02n': desc='few clouds (night)'; break;\n    case '03n': \n    case '03d': icon = '03d'; desc='scattered clouds'; break;\n    case '04n': \n    case '04d': icon = '04d'; desc='broken clouds'; break;\n    case '09n': \n    case '09d': icon = '09d'; desc='shower rain'; break;\n    case '10d': desc='rain (day time)'; break;\n    case '10n': desc='rain (night time)'; break;\n    case '11n': \n    case '11d': icon = '11d'; desc='thunderstorm'; break;\n    case '13n': \n    case '13d': icon = '13d'; desc='snow'; break;\n    case '50n': \n    case '50d': icon = '50d'; desc='mist'; break;\n}\nreturn {\n    payload: {\n        url: `https://www.airvisual.com/images/${icon}.png`,\n        desc: desc,\n        temp\n    }\n};",
     "outputs": 1,
     "noerr": 0,
     "x": 620,
     "y": 360,
-    "wires": [["7775e3db.18848c"]]
+    "wires": [["205c2369.1c05dc"]]
   },
   {
-    "id": "a31a1678.a0bb88",
+    "id": "285ad985.5d98b6",
     "type": "comment",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Display Icon by Weather",
     "info": "",
     "x": 930,
@@ -337,21 +343,21 @@
     "wires": []
   },
   {
-    "id": "d35f3730.4348f8",
+    "id": "3e2c0fb9.27763",
     "type": "function",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Mapping US AQI",
     "func": "const { city, state, country, pollution } = msg;\nreturn {\n    topic: `${city} / ${state}`,\n    payload: { aqi: pollution.aqius }\n};",
     "outputs": 1,
     "noerr": 0,
     "x": 610,
     "y": 460,
-    "wires": [["a4156f4.fe5df9"]]
+    "wires": [["1c983616.c13dfa"]]
   },
   {
-    "id": "a4156f4.fe5df9",
+    "id": "1c983616.c13dfa",
     "type": "ui_gauge",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "AQI Box",
     "group": "7b469d8d.557a74",
     "order": 1,
@@ -371,9 +377,9 @@
     "wires": []
   },
   {
-    "id": "f8a72e43.799ee",
+    "id": "3406e82e.317ac8",
     "type": "comment",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Display US AQI",
     "info": "",
     "x": 900,
@@ -381,9 +387,9 @@
     "wires": []
   },
   {
-    "id": "f1fb3606.4874b8",
+    "id": "4b2365f4.97fe8c",
     "type": "debug",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Console - Raw",
     "active": false,
     "tosidebar": true,
@@ -396,32 +402,32 @@
     "wires": []
   },
   {
-    "id": "9efb9b2f.b01458",
+    "id": "43b5b94f.58c4b8",
     "type": "function",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Extract Env.",
     "func": "return {\n    headers: {\n        'x-forwarded-for': msg.payload.publicIPv4\n    },\n    payload: {\n        city: env.get('AIRVISUAL_CITY'),\n        state: env.get('AIRVISUAL_STATE'),\n        country:env.get('AIRVISUAL_COUNTRY'),\n        key: env.get('AIRVISUAL_KEY')\n    }\n};",
     "outputs": 1,
     "noerr": 0,
     "x": 530,
     "y": 100,
-    "wires": [["57a5495e.eebfc8"]]
+    "wires": [["6b994278.3fd71c"]]
   },
   {
-    "id": "48603a4f.78e144",
+    "id": "d07b7bb2.0acb28",
     "type": "complete",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Trigger AirData",
-    "scope": ["30801090.8ae95"],
+    "scope": ["5651191a.672c98"],
     "uncaught": false,
     "x": 120,
     "y": 320,
-    "wires": [["f44c859b.39c048"]]
+    "wires": [["e6d2e3ff.cf5a5"]]
   },
   {
-    "id": "3f3da5d4.0da22a",
+    "id": "af4b133.697f7f",
     "type": "debug",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Console - airData",
     "active": false,
     "tosidebar": true,
@@ -434,21 +440,21 @@
     "wires": []
   },
   {
-    "id": "30801090.8ae95",
+    "id": "5651191a.672c98",
     "type": "function",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Save Data",
     "func": "function saveData({payload}) {\n    flow.set('airData', payload);\n    return flow.get('airData');\n}\n\nreturn saveData(msg);",
     "outputs": 1,
     "noerr": 0,
     "x": 890,
     "y": 100,
-    "wires": [["f1fb3606.4874b8"]]
+    "wires": [["4b2365f4.97fe8c"]]
   },
   {
-    "id": "2e95c843.225fc8",
+    "id": "8343aaa.1b45458",
     "type": "comment",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "When air data has been saved it trigger immediately.",
     "info": "",
     "x": 230,
@@ -456,9 +462,9 @@
     "wires": []
   },
   {
-    "id": "d7799393.010f2",
+    "id": "bb3429ca.e71668",
     "type": "inject",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Inject Every - 1 hour",
     "topic": "",
     "payload": "",
@@ -469,12 +475,12 @@
     "onceDelay": "1",
     "x": 140,
     "y": 120,
-    "wires": [["68c0af22.f04fb"]]
+    "wires": [["23b02522.3d2faa"]]
   },
   {
-    "id": "68c0af22.f04fb",
+    "id": "23b02522.3d2faa",
     "type": "http request",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Request Data",
     "method": "GET",
     "ret": "txt",
@@ -486,12 +492,12 @@
     "authType": "",
     "x": 360,
     "y": 120,
-    "wires": [["6f45b60d.e14f88"]]
+    "wires": [["11e289b6.707d26"]]
   },
   {
-    "id": "12d677e.26daa88",
+    "id": "e893e6e0.46b898",
     "type": "debug",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Console - Raw",
     "active": false,
     "tosidebar": true,
@@ -504,9 +510,9 @@
     "wires": []
   },
   {
-    "id": "6f45b60d.e14f88",
+    "id": "11e289b6.707d26",
     "type": "html",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Scraping Data",
     "property": "payload",
     "outproperty": "payload",
@@ -515,12 +521,12 @@
     "as": "single",
     "x": 560,
     "y": 120,
-    "wires": [["36988935.95eb16"]]
+    "wires": [["b3314734.a11bb8"]]
   },
   {
-    "id": "8dd509c7.ee0a28",
+    "id": "72027117.74c38",
     "type": "comment",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Scraping data from Worldometers",
     "info": "[Corona Virus](https://www.worldometers.info/coronavirus/)",
     "x": 180,
@@ -528,44 +534,44 @@
     "wires": []
   },
   {
-    "id": "73aecf9c.13644",
+    "id": "b51a99ae.3f8728",
     "type": "function",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Transform Data",
     "func": "function transformData() {\n  let virus = {};\n  const { payload: content } = flow.get(\"virusData\");\n\n  if (Array.isArray(content)) {\n    content.forEach(item => {\n      if (item) {\n        const [key, value] = item.split(\": \");\n        virus[`${key.trim()}`] = value.trim();\n      }\n    });\n  }\n  return virus;\n}\nreturn {\n  payload: transformData()\n};\n",
     "outputs": 1,
     "noerr": 0,
     "x": 360,
     "y": 300,
-    "wires": [["18a4786f.ad1238", "13b1db06.643bd5", "29c118cf.536258"]]
+    "wires": [["6a5659a9.785d38", "9d5abe7a.3372", "dd63e5bb.e301c8"]]
   },
   {
-    "id": "df505133.8da48",
+    "id": "9c01ecb6.96cd6",
     "type": "complete",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Trigger virusData",
-    "scope": ["36988935.95eb16"],
+    "scope": ["b3314734.a11bb8"],
     "uncaught": false,
     "x": 120,
     "y": 300,
-    "wires": [["73aecf9c.13644"]]
+    "wires": [["b51a99ae.3f8728"]]
   },
   {
-    "id": "36988935.95eb16",
+    "id": "b3314734.a11bb8",
     "type": "function",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Save Data",
     "func": "function saveData({ payload }) {\n    flow.set('virusData', { payload });\n    return flow.get('virusData');\n}\n\nreturn saveData(msg);",
     "outputs": 1,
     "noerr": 0,
     "x": 750,
     "y": 120,
-    "wires": [["12d677e.26daa88"]]
+    "wires": [["e893e6e0.46b898"]]
   },
   {
-    "id": "195e3de2.13c3d2",
+    "id": "d161845.4032c78",
     "type": "comment",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "When virus data has been saved it trigger immediately.",
     "info": "",
     "x": 240,
@@ -573,9 +579,9 @@
     "wires": []
   },
   {
-    "id": "18a4786f.ad1238",
+    "id": "6a5659a9.785d38",
     "type": "debug",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Console - virusData",
     "active": false,
     "tosidebar": true,
@@ -588,9 +594,9 @@
     "wires": []
   },
   {
-    "id": "89ae1d11.1f02a",
+    "id": "cbe4d159.7d614",
     "type": "ui_template",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "group": "f6849123.e05da",
     "name": "Corona Box",
     "order": 1,
@@ -605,21 +611,21 @@
     "wires": [[]]
   },
   {
-    "id": "13b1db06.643bd5",
+    "id": "9d5abe7a.3372",
     "type": "function",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Build HTML",
     "func": "function buildTemplate({ payload }) {\n  return Object.entries(payload)\n    .map(([key, value], i) => {\n      let css = \"gray\";\n\n      if (i === 1) css = \"red\";\n      else if (i === 2) css = \"green\";\n\n      return `<div class=\"${css}\"><h3>${key}</h3><span>${value}</span></div>`;\n    })\n    .join(\"\");\n}\nreturn {\n  payload: buildTemplate(msg)\n};\n",
     "outputs": 1,
     "noerr": 0,
     "x": 610,
     "y": 360,
-    "wires": [["89ae1d11.1f02a"]]
+    "wires": [["cbe4d159.7d614"]]
   },
   {
-    "id": "27f1197c.b533a6",
+    "id": "36a6c0c0.fa627",
     "type": "sendgrid",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "from": "",
     "to": "",
     "name": "Send Email",
@@ -629,9 +635,9 @@
     "wires": []
   },
   {
-    "id": "3392ca10.7091e6",
+    "id": "34f2c33e.e8de1c",
     "type": "debug",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Console - ngrok",
     "active": false,
     "tosidebar": true,
@@ -644,9 +650,9 @@
     "wires": []
   },
   {
-    "id": "20d9526a.543cee",
+    "id": "953c017.0631d",
     "type": "debug",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Console - Body",
     "active": false,
     "tosidebar": true,
@@ -659,9 +665,9 @@
     "wires": []
   },
   {
-    "id": "9f61036.710de",
+    "id": "c501b1f1.7c566",
     "type": "inject",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Turn on",
     "topic": "",
     "payload": "on",
@@ -672,23 +678,23 @@
     "onceDelay": 0.1,
     "x": 100,
     "y": 120,
-    "wires": [["8215316b.0c1f1"]]
+    "wires": [["52928c8b.b1aa04"]]
   },
   {
-    "id": "1aa26c67.ffd2e4",
+    "id": "ae26b0c5.3b27c",
     "type": "catch",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Catch All",
     "scope": null,
     "uncaught": false,
     "x": 100,
     "y": 600,
-    "wires": [["5c753c9e.e61d84"]]
+    "wires": [["ef94acc.ae0335"]]
   },
   {
-    "id": "5c753c9e.e61d84",
+    "id": "ef94acc.ae0335",
     "type": "debug",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Error Log",
     "active": true,
     "tosidebar": true,
@@ -701,21 +707,21 @@
     "wires": []
   },
   {
-    "id": "157986a8.4870b9",
+    "id": "e4d48288.317d5",
     "type": "function",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Prepare email Data",
     "func": "function buildTemplate(url) {\n    return `\n    <div style='margin 6%;'>\n        <a href=\"${url}/ui/\" target=\"_blank\">My Node-RED URL</a>\n    </div>`;    \n}\nfunction prepareEmailData({ payload }) {\n  const url = payload;\n   return {\n      topic: 'My Node-RED URL',\n      payload: buildTemplate(url),\n      key: env.get('SENDGRID_API_KEY'),\n      from: { email: env.get('SENDGRID_FROM'), name: 'Batify Bot' },\n      to: env.get('SENDGRID_TO')\n    };\n}\nreturn prepareEmailData(msg);\n",
     "outputs": 1,
     "noerr": 0,
     "x": 830,
     "y": 140,
-    "wires": [["27f1197c.b533a6", "20d9526a.543cee"]]
+    "wires": [["36a6c0c0.fa627", "953c017.0631d"]]
   },
   {
-    "id": "1ebefcb0.460523",
+    "id": "aa3ce080.787ef",
     "type": "inject",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Turn off",
     "topic": "",
     "payload": "off",
@@ -726,12 +732,12 @@
     "onceDelay": 0.1,
     "x": 90,
     "y": 180,
-    "wires": [["8215316b.0c1f1"]]
+    "wires": [["52928c8b.b1aa04"]]
   },
   {
-    "id": "29eccc45.2d7a84",
+    "id": "bd2c79e7.cb4ce8",
     "type": "comment",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "!!! Bootstrapper Proxy !!!",
     "info": "",
     "x": 150,
@@ -739,9 +745,9 @@
     "wires": []
   },
   {
-    "id": "8215316b.0c1f1",
+    "id": "52928c8b.b1aa04",
     "type": "ngrok",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "port": "",
     "creds": "24d898f8.bda1b8",
     "subdomain": "",
@@ -749,12 +755,12 @@
     "auth": "",
     "x": 330,
     "y": 140,
-    "wires": [["3392ca10.7091e6", "f993aa1e.e0e1f8"]]
+    "wires": [["34f2c33e.e8de1c", "373fda00.1de276"]]
   },
   {
-    "id": "504f1bf8.1d16e4",
+    "id": "e4d25816.f4e308",
     "type": "comment",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Handle All Error Exceptions",
     "info": "",
     "x": 150,
@@ -762,9 +768,9 @@
     "wires": []
   },
   {
-    "id": "b6f7e0c9.a44ef",
+    "id": "1dafa158.c0adff",
     "type": "comment",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Custom sendgrid configuration",
     "info": "## Can assign any data that SendGrid API has to provide\n - API key\n - Send To Email\n - Send From Email(s)\n - Body Message\n - Body with Attachment\n - File Name\n - Template ID\n - Template Data\n",
     "x": 860,
@@ -772,9 +778,9 @@
     "wires": []
   },
   {
-    "id": "57db19c3.045058",
+    "id": "34e8fb9b.f613c4",
     "type": "comment",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Send email via Sendgrid API",
     "info": "",
     "x": 1160,
@@ -782,19 +788,19 @@
     "wires": []
   },
   {
-    "id": "ec587177.17909",
+    "id": "b48e993b.df2018",
     "type": "status",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "",
     "scope": null,
     "x": 640,
     "y": 600,
-    "wires": [["6f8089a8.97f938"]]
+    "wires": [["d0b702.6c5ab9"]]
   },
   {
-    "id": "6f8089a8.97f938",
+    "id": "d0b702.6c5ab9",
     "type": "debug",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Console - Status",
     "active": false,
     "tosidebar": true,
@@ -807,9 +813,9 @@
     "wires": []
   },
   {
-    "id": "ef178bd2.a98c58",
+    "id": "3aae570.e5780aa",
     "type": "comment",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Handle All Node Status",
     "info": "",
     "x": 680,
@@ -817,20 +823,20 @@
     "wires": []
   },
   {
-    "id": "52ac9122.3d9c3",
+    "id": "b633ff6a.dd257",
     "type": "catch",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Catch All",
     "scope": null,
     "uncaught": false,
     "x": 100,
     "y": 620,
-    "wires": [["581cddc9.d7d6f4"]]
+    "wires": [["5a233be0.1ad334"]]
   },
   {
-    "id": "581cddc9.d7d6f4",
+    "id": "5a233be0.1ad334",
     "type": "debug",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Error Log",
     "active": true,
     "tosidebar": true,
@@ -843,9 +849,9 @@
     "wires": []
   },
   {
-    "id": "1136e637.fc283a",
+    "id": "a3c1689f.fff2f8",
     "type": "comment",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Handle All Error Exceptions",
     "info": "",
     "x": 150,
@@ -853,19 +859,19 @@
     "wires": []
   },
   {
-    "id": "4e7d8e0f.60a53",
+    "id": "1d4105ca.29139a",
     "type": "status",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "",
     "scope": null,
     "x": 620,
     "y": 620,
-    "wires": [["f39aab59.b03ef8"]]
+    "wires": [["ed26a6a7.6002b8"]]
   },
   {
-    "id": "f39aab59.b03ef8",
+    "id": "ed26a6a7.6002b8",
     "type": "debug",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Console - Status",
     "active": false,
     "tosidebar": true,
@@ -878,9 +884,9 @@
     "wires": []
   },
   {
-    "id": "155c7552.60c11b",
+    "id": "8fe3e8ff.788348",
     "type": "comment",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Handle All Node Status",
     "info": "",
     "x": 660,
@@ -888,20 +894,20 @@
     "wires": []
   },
   {
-    "id": "d3eaf23b.702e1",
+    "id": "d650a369.55684",
     "type": "catch",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Catch All",
     "scope": null,
     "uncaught": false,
     "x": 100,
     "y": 640,
-    "wires": [["b13ba39a.7fbf"]]
+    "wires": [["666dc280.56dc3c"]]
   },
   {
-    "id": "b13ba39a.7fbf",
+    "id": "666dc280.56dc3c",
     "type": "debug",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Error Log",
     "active": true,
     "tosidebar": true,
@@ -914,9 +920,9 @@
     "wires": []
   },
   {
-    "id": "73611c23.ed9864",
+    "id": "97e77c50.1ca33",
     "type": "comment",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Handle All Error Exceptions",
     "info": "",
     "x": 150,
@@ -924,19 +930,19 @@
     "wires": []
   },
   {
-    "id": "925e9ea0.7621b",
+    "id": "6298bd26.c25f24",
     "type": "status",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "",
     "scope": null,
     "x": 600,
     "y": 640,
-    "wires": [["60e6d304.515b9c"]]
+    "wires": [["4957a179.06ddc"]]
   },
   {
-    "id": "60e6d304.515b9c",
+    "id": "4957a179.06ddc",
     "type": "debug",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Console - Status",
     "active": false,
     "tosidebar": true,
@@ -949,9 +955,9 @@
     "wires": []
   },
   {
-    "id": "cbc2b673.294268",
+    "id": "3d21362e.9f5dca",
     "type": "comment",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Handle All Node Status",
     "info": "",
     "x": 640,
@@ -959,9 +965,9 @@
     "wires": []
   },
   {
-    "id": "fc084f49.34d5f",
+    "id": "c55f6f1.3a6129",
     "type": "ip",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Public IP",
     "https": false,
     "timeout": "5000",
@@ -971,23 +977,23 @@
     "publicIPv6": false,
     "x": 360,
     "y": 100,
-    "wires": [["9efb9b2f.b01458"]]
+    "wires": [["43b5b94f.58c4b8"]]
   },
   {
-    "id": "b8f7fe76.c1cff",
+    "id": "fba75b95.ab6088",
     "type": "catch",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Catch All",
     "scope": null,
     "uncaught": false,
     "x": 120,
     "y": 660,
-    "wires": [["f42fb403.662a88"]]
+    "wires": [["63b78d29.26ff84"]]
   },
   {
-    "id": "f42fb403.662a88",
+    "id": "63b78d29.26ff84",
     "type": "debug",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Error Log",
     "active": true,
     "tosidebar": true,
@@ -1000,9 +1006,9 @@
     "wires": []
   },
   {
-    "id": "f35b1d7f.13879",
+    "id": "90289810.dfdcd8",
     "type": "comment",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Handle All Error Exceptions",
     "info": "",
     "x": 170,
@@ -1010,19 +1016,19 @@
     "wires": []
   },
   {
-    "id": "c8902ba0.007298",
+    "id": "e86ed237.fb0ef",
     "type": "status",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "",
     "scope": null,
     "x": 620,
     "y": 660,
-    "wires": [["e94053a5.2db0d"]]
+    "wires": [["beb79f8e.251bc"]]
   },
   {
-    "id": "e94053a5.2db0d",
+    "id": "beb79f8e.251bc",
     "type": "debug",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Console - Status",
     "active": false,
     "tosidebar": true,
@@ -1035,9 +1041,9 @@
     "wires": []
   },
   {
-    "id": "8311e146.00017",
+    "id": "5ab43c19.800184",
     "type": "comment",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Handle All Node Status",
     "info": "",
     "x": 660,
@@ -1045,9 +1051,9 @@
     "wires": []
   },
   {
-    "id": "9996b23a.ab2d4",
+    "id": "26f45cd.d6b94a4",
     "type": "inject",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "",
     "topic": "",
     "payload": "",
@@ -1058,12 +1064,12 @@
     "onceDelay": 0.1,
     "x": 140,
     "y": 100,
-    "wires": [["c91abf4b.ade8d"]]
+    "wires": [["203a9317.51028c"]]
   },
   {
-    "id": "f537bad6.133658",
+    "id": "a96d1de3.c3239",
     "type": "mqtt in",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Sub: sensors/aqi/outdoor",
     "topic": "sensors/aqi/outdoor",
     "qos": "2",
@@ -1071,12 +1077,12 @@
     "broker": "82d75fe6.a2011",
     "x": 170,
     "y": 160,
-    "wires": [["43b414ff.ee6a6c"]]
+    "wires": [["29ec1b42.4db604"]]
   },
   {
-    "id": "c91abf4b.ade8d",
+    "id": "203a9317.51028c",
     "type": "mqtt out",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Pub: sensors/aqi/outdoor",
     "topic": "sensors/aqi/outdoor",
     "qos": "",
@@ -1087,9 +1093,9 @@
     "wires": []
   },
   {
-    "id": "43b414ff.ee6a6c",
+    "id": "29ec1b42.4db604",
     "type": "debug",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Console - MQTT",
     "active": false,
     "tosidebar": true,
@@ -1102,19 +1108,19 @@
     "wires": []
   },
   {
-    "id": "bdf280c0.5d6f6",
+    "id": "e3282dd6.1a1a9",
     "type": "comment",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "Sample: Retrieve AQI (Eko)",
     "info": "",
-    "x": 160,
+    "x": 150,
     "y": 80,
     "wires": []
   },
   {
-    "id": "2a37b357.01261c",
+    "id": "7ad159b.cadf8a8",
     "type": "ui_gauge",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "AQI Box",
     "group": "93797725.a3d6e8",
     "order": 1,
@@ -1129,35 +1135,35 @@
     "colors": ["#40e400", "#ffff00", "#f91000"],
     "seg1": "Moderate",
     "seg2": "Unhealthy",
-    "x": 380,
+    "x": 680,
     "y": 140,
     "wires": []
   },
   {
-    "id": "99367b0d.6b3d88",
+    "id": "ac978c90.78f5a",
     "type": "comment",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "Display US AQI",
     "info": "",
-    "x": 400,
+    "x": 700,
     "y": 80,
     "wires": []
   },
   {
-    "id": "180542a.4b222bd",
+    "id": "ce8a92cb.92325",
     "type": "catch",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "Catch All",
     "scope": null,
     "uncaught": false,
     "x": 100,
     "y": 620,
-    "wires": [["b6521f48.7cf69"]]
+    "wires": [["465ffc49.3f4654"]]
   },
   {
-    "id": "b6521f48.7cf69",
+    "id": "465ffc49.3f4654",
     "type": "debug",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "Error Log",
     "active": true,
     "tosidebar": true,
@@ -1170,9 +1176,9 @@
     "wires": []
   },
   {
-    "id": "20a38f2f.c29b8",
+    "id": "804d6611.b04c68",
     "type": "comment",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "Handle All Error Exceptions",
     "info": "",
     "x": 150,
@@ -1180,19 +1186,19 @@
     "wires": []
   },
   {
-    "id": "c702d4a4.1f1c88",
+    "id": "e7a61643.823848",
     "type": "status",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "",
     "scope": null,
     "x": 620,
     "y": 620,
-    "wires": [["efa79d3.a7a8f6"]]
+    "wires": [["f1e4079b.5c5288"]]
   },
   {
-    "id": "efa79d3.a7a8f6",
+    "id": "f1e4079b.5c5288",
     "type": "debug",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "Console - Status",
     "active": false,
     "tosidebar": true,
@@ -1205,9 +1211,9 @@
     "wires": []
   },
   {
-    "id": "47407b1e.2a24a4",
+    "id": "fb08c67a.4c9648",
     "type": "comment",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "Handle All Node Status",
     "info": "",
     "x": 660,
@@ -1215,22 +1221,22 @@
     "wires": []
   },
   {
-    "id": "bf2abbe8.da6038",
+    "id": "6feb62ca.9f615c",
     "type": "mqtt in",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Sub: DUST",
     "topic": "DUST",
     "qos": "2",
     "datatype": "auto",
     "broker": "8675a6a8.d229b8",
-    "x": 130,
+    "x": 120,
     "y": 320,
-    "wires": [["e2446cc0.da77b", "55b200cb.02976"]]
+    "wires": [["6a91ddfd.79d464", "2563ff5.937bd"]]
   },
   {
-    "id": "e2446cc0.da77b",
+    "id": "6a91ddfd.79d464",
     "type": "debug",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Console - Eko Dust",
     "active": true,
     "tosidebar": true,
@@ -1243,9 +1249,9 @@
     "wires": []
   },
   {
-    "id": "7b68e9fd.703988",
+    "id": "928d7730.5d07f8",
     "type": "mqtt in",
-    "z": "2e34c3bc.d77f9c",
+    "z": "cf8099bf.e74d38",
     "name": "Sub: sensors/aqi/indoor",
     "topic": "sensors/aqi/indoor",
     "qos": "2",
@@ -1253,12 +1259,12 @@
     "broker": "82d75fe6.a2011",
     "x": 140,
     "y": 140,
-    "wires": [["2a37b357.01261c"]]
+    "wires": [["50bfc332.c33dbc"]]
   },
   {
-    "id": "55b200cb.02976",
+    "id": "2563ff5.937bd",
     "type": "mqtt out",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Pub: sensors/aqi/indoor",
     "topic": "sensors/aqi/indoor",
     "qos": "",
@@ -1269,9 +1275,9 @@
     "wires": []
   },
   {
-    "id": "3f42b4e.c58024c",
+    "id": "2083c961.910fd6",
     "type": "comment",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Sample MQTT Local",
     "info": "",
     "x": 150,
@@ -1279,9 +1285,9 @@
     "wires": []
   },
   {
-    "id": "58003516.841f8c",
+    "id": "fc8843bc.bec05",
     "type": "comment",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Dust Sensor (Eko)",
     "info": "",
     "x": 150,
@@ -1289,9 +1295,9 @@
     "wires": []
   },
   {
-    "id": "d7092491.a9b5e8",
+    "id": "81b338bb.f00578",
     "type": "mqtt out",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Pub: DUST",
     "topic": "DUST",
     "qos": "",
@@ -1302,21 +1308,21 @@
     "wires": []
   },
   {
-    "id": "f8b51c58.d8d27",
+    "id": "60e1f43c.54810c",
     "type": "function",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Random AQI",
     "func": "function random(){\n    return Math.floor(Math.random() * 300);\n}\n\nreturn {\n    payload: random()\n}",
     "outputs": 1,
     "noerr": 0,
     "x": 350,
     "y": 460,
-    "wires": [["d7092491.a9b5e8"]]
+    "wires": [["81b338bb.f00578"]]
   },
   {
-    "id": "7c3cb771.ce32f8",
+    "id": "60622303.00dc3c",
     "type": "ui_button",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Random Button",
     "group": "7190acf.653b054",
     "order": 1,
@@ -1333,12 +1339,12 @@
     "topic": "",
     "x": 140,
     "y": 460,
-    "wires": [["f8b51c58.d8d27"]]
+    "wires": [["60e1f43c.54810c"]]
   },
   {
-    "id": "29c118cf.536258",
+    "id": "dd63e5bb.e301c8",
     "type": "mqtt out",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Pub: info/web/corona",
     "topic": "info/web/corona",
     "qos": "",
@@ -1349,9 +1355,9 @@
     "wires": []
   },
   {
-    "id": "59b92ea1.3bd35",
+    "id": "d3018adc.2d2418",
     "type": "comment",
-    "z": "ed906b93.077e28",
+    "z": "f56afe81.c9c94",
     "name": "Publish Corona Data",
     "info": "",
     "x": 630,
@@ -1359,9 +1365,9 @@
     "wires": []
   },
   {
-    "id": "2cf16190.92d72e",
+    "id": "d0d361bd.91405",
     "type": "mqtt out",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Pub: info/aqi/airvisual",
     "topic": "info/aqi/airvisual",
     "qos": "",
@@ -1372,9 +1378,9 @@
     "wires": []
   },
   {
-    "id": "6317f4bd.efd76c",
+    "id": "44d2f28e.bb5d6c",
     "type": "comment",
-    "z": "fa950047.80a58",
+    "z": "7a35a7df.308d48",
     "name": "Publish AirVisual Data",
     "info": "",
     "x": 620,
@@ -1382,9 +1388,9 @@
     "wires": []
   },
   {
-    "id": "4e68d6cb.2b8488",
+    "id": "8c47de30.ffc64",
     "type": "comment",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Random Dust Volume (Eko)",
     "info": "",
     "x": 180,
@@ -1392,9 +1398,9 @@
     "wires": []
   },
   {
-    "id": "f993aa1e.e0e1f8",
+    "id": "373fda00.1de276",
     "type": "switch",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Filtered URL",
     "property": "payload",
     "propertyType": "msg",
@@ -1404,12 +1410,12 @@
     "outputs": 1,
     "x": 570,
     "y": 140,
-    "wires": [["157986a8.4870b9", "9bda05d2.de8fa8"]]
+    "wires": [["e4d48288.317d5", "c1c128f5.b123e8"]]
   },
   {
-    "id": "9bda05d2.de8fa8",
+    "id": "c1c128f5.b123e8",
     "type": "mqtt out",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Pub: info/proxy/url",
     "topic": "info/proxy/url",
     "qos": "",
@@ -1420,9 +1426,9 @@
     "wires": []
   },
   {
-    "id": "79af3260.39330c",
+    "id": "28e7ddbd.09c812",
     "type": "comment",
-    "z": "de7ffed2.b31b1",
+    "z": "5ae0159f.15184c",
     "name": "Publish new URL",
     "info": "Publish new URL to the client via MQTT",
     "x": 820,
@@ -1430,9 +1436,9 @@
     "wires": []
   },
   {
-    "id": "bf706cf8.16054",
+    "id": "64e72b1c.1e6e64",
     "type": "mqtt in",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Sub: info/#",
     "topic": "info/#",
     "qos": "2",
@@ -1440,12 +1446,12 @@
     "broker": "82d75fe6.a2011",
     "x": 780,
     "y": 100,
-    "wires": [["e038f978.a88c08"]]
+    "wires": [["e7882757.2a67a8"]]
   },
   {
-    "id": "e038f978.a88c08",
+    "id": "e7882757.2a67a8",
     "type": "debug",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Console - Info",
     "active": true,
     "tosidebar": true,
@@ -1458,13 +1464,220 @@
     "wires": []
   },
   {
-    "id": "8c7a670.e02c098",
+    "id": "dc9ae4c0.0eb808",
     "type": "comment",
-    "z": "c7b94f5.66793b",
+    "z": "15974936.7b18a7",
     "name": "Subscribe All Info (Local)",
     "info": "",
     "x": 830,
     "y": 60,
+    "wires": []
+  },
+  {
+    "id": "c7b649f9.817908",
+    "type": "mqtt in",
+    "z": "8f2390e0.2d8a9",
+    "d": true,
+    "name": "Sub: info/proxy/url",
+    "topic": "info/proxy/url",
+    "qos": "2",
+    "datatype": "auto",
+    "broker": "82d75fe6.a2011",
+    "x": 130,
+    "y": 100,
+    "wires": [["26aeb2c0.58229e"]]
+  },
+  {
+    "id": "bea7af4b.5777a",
+    "type": "comment",
+    "z": "8f2390e0.2d8a9",
+    "name": "Update webhook URL for Bot",
+    "info": "",
+    "x": 160,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "26aeb2c0.58229e",
+    "type": "function",
+    "z": "8f2390e0.2d8a9",
+    "name": "Prepare Bot Data",
+    "func": "return {\n  headers: {\n    Authorization: `Bearer ${env.get(\"EKO_BOT_TOKEN\")}`\n  },\n  method: \"POST\",\n  url: `${env.get(\"EKO_BOT_HOST\")}/api/v1/admin/bot/${env.get(\"EKO_BOT_ID\")}`,\n  payload: {\n    username: env.get(\"EKO_BOT_USERNAME\"),\n    webhookUrl: `${msg.payload}/events/bot`,\n    enabled: true,\n    linkedUserId: env.get(\"EKO_BOT_USER_ID\"),\n    systemUserId: env.get(\"EKO_BOT_ID\")\n  }\n};\n",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 370,
+    "y": 100,
+    "wires": [["e20edef4.2d0f3"]]
+  },
+  {
+    "id": "e20edef4.2d0f3",
+    "type": "http request",
+    "z": "8f2390e0.2d8a9",
+    "name": "POST: Bot Data",
+    "method": "use",
+    "ret": "txt",
+    "paytoqs": false,
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 600,
+    "y": 100,
+    "wires": [["23dfdc99.1eab74"]]
+  },
+  {
+    "id": "9737baa7.983148",
+    "type": "catch",
+    "z": "8f2390e0.2d8a9",
+    "name": "Catch All",
+    "scope": null,
+    "uncaught": false,
+    "x": 100,
+    "y": 520,
+    "wires": [["26e828a8.7c0468"]]
+  },
+  {
+    "id": "26e828a8.7c0468",
+    "type": "debug",
+    "z": "8f2390e0.2d8a9",
+    "name": "Error Log",
+    "active": true,
+    "tosidebar": true,
+    "console": true,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "x": 310,
+    "y": 520,
+    "wires": []
+  },
+  {
+    "id": "f60e348f.adee98",
+    "type": "comment",
+    "z": "8f2390e0.2d8a9",
+    "name": "Handle All Error Exceptions",
+    "info": "",
+    "x": 160,
+    "y": 460,
+    "wires": []
+  },
+  {
+    "id": "6e1d637e.8810cc",
+    "type": "status",
+    "z": "8f2390e0.2d8a9",
+    "name": "",
+    "scope": null,
+    "x": 560,
+    "y": 520,
+    "wires": [["ed1366ea.13e6a8"]]
+  },
+  {
+    "id": "ed1366ea.13e6a8",
+    "type": "debug",
+    "z": "8f2390e0.2d8a9",
+    "name": "Console - Status",
+    "active": false,
+    "tosidebar": true,
+    "console": true,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "x": 830,
+    "y": 520,
+    "wires": []
+  },
+  {
+    "id": "82edc804.442a88",
+    "type": "comment",
+    "z": "8f2390e0.2d8a9",
+    "name": "Handle All Node Status",
+    "info": "",
+    "x": 600,
+    "y": 460,
+    "wires": []
+  },
+  {
+    "id": "23dfdc99.1eab74",
+    "type": "debug",
+    "z": "8f2390e0.2d8a9",
+    "name": "Console - Bot Data",
+    "active": false,
+    "tosidebar": true,
+    "console": true,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "x": 840,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "e480b48b.816048",
+    "type": "debug",
+    "z": "8f2390e0.2d8a9",
+    "name": "Console - Bot Events",
+    "active": true,
+    "tosidebar": true,
+    "console": true,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "x": 510,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "6adb095b.9d2aa8",
+    "type": "http in",
+    "z": "8f2390e0.2d8a9",
+    "name": "Hook: events/bot",
+    "url": "/events/bot",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 120,
+    "y": 200,
+    "wires": [["e480b48b.816048", "a36d505a.c9e82"]]
+  },
+  {
+    "id": "a36d505a.c9e82",
+    "type": "http response",
+    "z": "8f2390e0.2d8a9",
+    "name": "Reply: OK",
+    "statusCode": "200",
+    "headers": { "node-red-state": "success" },
+    "x": 470,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "50bfc332.c33dbc",
+    "type": "delay",
+    "z": "cf8099bf.e74d38",
+    "name": "Limit (5 sec.)",
+    "pauseType": "rate",
+    "timeout": "5",
+    "timeoutUnits": "seconds",
+    "rate": "1",
+    "nbRateUnits": "5",
+    "rateUnits": "second",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "drop": true,
+    "x": 370,
+    "y": 140,
+    "wires": [["7ad159b.cadf8a8"]]
+  },
+  {
+    "id": "101fa3c8.8a72fc",
+    "type": "comment",
+    "z": "cf8099bf.e74d38",
+    "name": "Rate Limit - 1 message per 5 sec.",
+    "info": "",
+    "x": 430,
+    "y": 80,
     "wires": []
   }
 ]
