@@ -15,4 +15,4 @@ WORKDIR /usr/src/node-red
 
 COPY src/contrib/ngrok/* ./node_modules/node-red-contrib-ngrok/
 COPY src/contrib/sendgrid/* ./node_modules/node-red-contrib-sendgrid/
-COPY flows.json ./
+COPY src/flow/flows.json ./

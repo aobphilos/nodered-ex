@@ -25,7 +25,7 @@ try {
   // Resolve a device, resolving the token automatically or from storage
   miio
     .device({
-      address: '192.168.13.1',
+      address: '192.168.13.1'
       // address: '192.168.1.100',
       // token: '4817d547ac9a7d80066395ee7b3cab6e'
     })
@@ -46,7 +46,7 @@ try {
         ssid: 'MOSHI_PARK_WIFI',
         passwd: 'rfedwsqa'
       })
-      .then((info) => {
+      .then(info => {
         console.log('after wireless changed: ', info);
         return device.management.updateToken(token);
       })

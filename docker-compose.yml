@@ -8,7 +8,7 @@ version: "3.7"
 
 services:
   node-red:
-    image: aobphilos/node-red:aqi
+    image: aobphilos/node-red:latest
     restart: unless-stopped
     env_file:
       - ./configs/.env
