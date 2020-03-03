@@ -11,6 +11,7 @@
 * Connect `AirVisual` API for AQI data
 * Find a current `IP` (public and private)
 * Communicate between flow with `MQTT`
+* Receive GPS data from `Blynk` and send notifications to the device
 
 ---
 

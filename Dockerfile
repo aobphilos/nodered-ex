@@ -8,7 +8,8 @@ RUN npm install \
           node-red-dashboard \
           node-red-contrib-ngrok \
           node-red-contrib-sendgrid \
-          node-red-contrib-ip
+          node-red-contrib-ip \
+          node-red-contrib-blynk-ws
         #   node-red-contrib-miio-airpurifier \
 
 WORKDIR /usr/src/node-red
